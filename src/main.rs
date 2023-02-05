@@ -13,8 +13,13 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    if let Ok(lines) = read_lines(&args.path) {
-        for line in lines {
+
+    parse_lines(&args.path);
+}
+
+fn parse_lines<P>(filename: P) where P: AsRef<Path> {
+    if let Ok(line_buffer) = read_lines(&filename) {
+        for line in line_buffer {
             if let Ok(l) = line {
                 println!("{l}");
             } else {
@@ -22,7 +27,7 @@ fn main() {
             }
         }
     } else {
-        eprintln!("Failed to open file '{}'", &args.path);
+        eprintln!("Failed to open file '{}'", filename.as_ref().display());
     }
 }
 
