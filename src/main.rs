@@ -17,7 +17,7 @@ struct Args {
     path: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum Heading {
     H1(String),
     H2(String),
@@ -86,5 +86,6 @@ where
         eprintln!("Failed to open file '{}'", filename.as_ref().display());
     }
 
+    result.dedup();
     result
 }

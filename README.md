@@ -4,7 +4,6 @@ Markdown talk outline parser.
 
 ## `// TODO`
 
-- Remove repeating consecutive headings,
 - Pretty-print the outline in ASCII.
 
 ## Ideas
