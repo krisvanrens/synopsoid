@@ -52,16 +52,16 @@ where
 
     fn parse_line(line: &str) -> Option<Heading> {
         lazy_static! {
-            static ref RE_HEADER: Regex = Regex::new(r"^#+.*$").unwrap();
-            static ref RE_H1: Regex = Regex::new(r"^#\s.*$").unwrap();
-            static ref RE_H2: Regex = Regex::new(r"^##\s.*$").unwrap();
+            static ref RE_HEADING: Regex = Regex::new(r"^#{1,2}\s.*$").unwrap();
+            static ref RE_H1: Regex = Regex::new(r"^#\s(.*)$").unwrap();
+            static ref RE_H2: Regex = Regex::new(r"^##\s(.*)$").unwrap();
         }
 
-        if RE_HEADER.is_match(line) {
+        if RE_HEADING.is_match(line) {
             return if RE_H1.is_match(line) {
-                Some(Heading::H1("H1".to_string()))
+                Some(Heading::H1(RE_H1.captures(line).unwrap()[1].to_string()))
             } else if RE_H2.is_match(line) {
-                Some(Heading::H2("H2".to_string()))
+                Some(Heading::H2(RE_H2.captures(line).unwrap()[1].to_string()))
             } else {
                 None
             };
