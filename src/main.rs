@@ -58,10 +58,12 @@ where
         }
 
         if RE_HEADING.is_match(line) {
+            let get_title = |re: &Regex| re.captures(line).unwrap()[1].to_string();
+
             return if RE_H1.is_match(line) {
-                Some(Heading::H1(RE_H1.captures(line).unwrap()[1].to_string()))
+                Some(Heading::H1(get_title(&RE_H1)))
             } else if RE_H2.is_match(line) {
-                Some(Heading::H2(RE_H2.captures(line).unwrap()[1].to_string()))
+                Some(Heading::H2(get_title(&RE_H2)))
             } else {
                 None
             };

@@ -4,7 +4,6 @@ Markdown talk outline parser.
 
 ## `// TODO`
 
-- Create an ordered collection of headings,
 - Remove repeating consecutive headings,
 - Pretty-print the outline in ASCII.
 
@@ -12,3 +11,4 @@ Markdown talk outline parser.
 
 - Change the file line reader in an iterable collection.
 - Add JSON output.
+- Remove HTML and Markdown formatting from titles.
