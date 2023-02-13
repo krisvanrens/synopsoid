@@ -25,14 +25,30 @@ enum Heading {
 
 type Outline = Vec<Heading>;
 
+trait Printable {
+    fn print(&self);
+}
+
+// Example printed layout:
+//
+//   ⇒ Heading 1
+//     ↳ Heading 2
+//
+impl Printable for Heading {
+    fn print(&self) {
+        match self {
+            Heading::H1(title) => println!("\u{21d2} {title}"),
+            Heading::H2(title) => println!("  \u{21b3} {title}"),
+        }
+    }
+}
+
 fn main() {
     let args = Args::parse();
     let synopsis = parse_lines(args.path);
 
-    // XXX
-    println!("Synopsis size: {} items", synopsis.len());
-    for line in synopsis {
-        println!("{line:?}");
+    for heading in synopsis {
+        heading.print();
     }
 }
 
