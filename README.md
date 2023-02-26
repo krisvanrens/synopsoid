@@ -6,7 +6,6 @@ Markdown talk outline parser.
 
 - Remove HTML formatting from titles.
 - Remove Markdown formatting from titles.
-- Add a newline before every non-first H1.
 
 ## Ideas
 

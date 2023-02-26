@@ -5,6 +5,7 @@ use std::{
     fs::File,
     io::{self, BufRead},
     path::Path,
+    sync::atomic::{AtomicBool, Ordering},
 };
 
 use clap::Parser;
@@ -38,7 +39,16 @@ trait Printable {
 impl Printable for Heading {
     fn print(&self) {
         match self {
-            Heading::H1(title) => println!("\u{21d2} {}", format!("{title}").bold()),
+            Heading::H1(title) => {
+                static FIRST_PRINT: AtomicBool = AtomicBool::new(true);
+                let prefix = if !FIRST_PRINT.load(Ordering::Relaxed) {
+                    "\n"
+                } else {
+                    FIRST_PRINT.store(false, Ordering::SeqCst);
+                    ""
+                };
+                println!("{}\u{21d2} {}", prefix, format!("{title}").bold())
+            }
             Heading::H2(title) => println!("  \u{21b3} {title}"),
         }
     }
