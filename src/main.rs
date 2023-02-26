@@ -47,7 +47,7 @@ impl Printable for Heading {
                     FIRST_PRINT.store(false, Ordering::SeqCst);
                     ""
                 };
-                println!("{}\u{21d2} {}", prefix, format!("{title}").bold())
+                println!("{}\u{21d2} {}", prefix, title.to_string().bold())
             }
             Heading::H2(title) => println!("  \u{21b3} {title}"),
         }
