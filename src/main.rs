@@ -1,3 +1,4 @@
+use colored::Colorize;
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::{
@@ -37,7 +38,7 @@ trait Printable {
 impl Printable for Heading {
     fn print(&self) {
         match self {
-            Heading::H1(title) => println!("\u{21d2} {title}"),
+            Heading::H1(title) => println!("\u{21d2} {}", format!("{title}").bold()),
             Heading::H2(title) => println!("  \u{21b3} {title}"),
         }
     }
