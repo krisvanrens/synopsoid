@@ -1,8 +1,9 @@
 use colored::Colorize;
 use lazy_static::lazy_static;
 use regex::Regex;
+use serde::Serialize;
 use std::{
-    fs::File,
+    fs::{self, File},
     io::{self, BufRead},
     path::Path,
     sync::atomic::{AtomicBool, Ordering},
@@ -14,12 +15,16 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// The path to the markdown file to parse.
+    /// The path to the input markdown file to parse.
     #[arg(short, long)]
     path: String,
+
+    /// The path to an (optional) output JSON file. Providing this will disable printing.
+    #[arg(short, long, default_value = "")]
+    output: String,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
 enum Heading {
     H1(String),
     H2(String),
@@ -58,8 +63,16 @@ fn main() {
     let args = Args::parse();
     let synopsis = parse_lines(args.path);
 
-    for heading in synopsis {
-        heading.print();
+    if args.output.is_empty() {
+        for heading in synopsis {
+            heading.print();
+        }
+    } else {
+        fs::write(
+            &args.output,
+            serde_json::to_string_pretty(&synopsis).unwrap(),
+        )
+        .unwrap_or_else(|_| panic!("unable to write output file '{}'", &args.output));
     }
 }
 
