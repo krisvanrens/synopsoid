@@ -29,7 +29,7 @@ Synopsoid output:
 
 ⇒ Chapter 2 Subtitle
   ↳ Section 2.1: bold
-  ↳ Section 2.2: matc
+  ↳ Section 2.2: match
 ```
 
 ## Ideas
