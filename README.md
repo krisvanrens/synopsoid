@@ -1,6 +1,6 @@
 # synopsoid
 
-Markdown talk outline parser.
+Markdown file outline parser.
 
 ## Example
 
