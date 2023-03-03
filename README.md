@@ -5,7 +5,6 @@ Markdown talk outline parser.
 ## `// TODO`
 
 - Remove HTML formatting from titles.
-- Remove Markdown formatting from titles.
 
 ## Ideas
 

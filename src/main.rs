@@ -77,6 +77,19 @@ where
         Ok(io::BufReader::new(file).lines())
     }
 
+    fn clean_title(title: &str) -> String {
+        let mut result : String;
+
+        lazy_static! {
+            static ref RE_MD_QUOTE: Regex = Regex::new(r"([`*])").unwrap();
+            static ref RE_MD_STYLE: Regex = Regex::new(r"(\{\.[a-z]{2,3}\})").unwrap();
+        }
+
+        result = RE_MD_QUOTE.replace_all(title, "").to_string();
+        result = RE_MD_STYLE.replace_all(&result, "").to_string();
+        result
+    }
+
     fn parse_line(line: &str) -> Option<Heading> {
         lazy_static! {
             static ref RE_HEADING: Regex = Regex::new(r"^#{1,2}\s.*$").unwrap();
@@ -85,7 +98,7 @@ where
         }
 
         if RE_HEADING.is_match(line) {
-            let get_title = |re: &Regex| re.captures(line).unwrap()[1].to_string();
+            let get_title = |re: &Regex| clean_title(&re.captures(line).unwrap()[1]);
 
             return if RE_H1.is_match(line) {
                 Some(Heading::H1(get_title(&RE_H1)))
