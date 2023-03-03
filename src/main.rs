@@ -78,14 +78,18 @@ where
     }
 
     fn clean_title(title: &str) -> String {
-        let mut result : String;
-
         lazy_static! {
+            static ref RE_HTML: Regex = Regex::new(r"(<[/]*[a-z0-9\-]+>)").unwrap();
+            static ref RE_HTML_BR: Regex = Regex::new(r"(<br/>)").unwrap();
             static ref RE_MD_QUOTE: Regex = Regex::new(r"([`*])").unwrap();
             static ref RE_MD_STYLE: Regex = Regex::new(r"(\{\.[a-z]{2,3}\})").unwrap();
         }
 
-        result = RE_MD_QUOTE.replace_all(title, "").to_string();
+        let mut result: String;
+
+        result = RE_HTML.replace_all(title, "").to_string();
+        result = RE_HTML_BR.replace_all(&result, " ").to_string();
+        result = RE_MD_QUOTE.replace_all(&result, "").to_string();
         result = RE_MD_STYLE.replace_all(&result, "").to_string();
         result
     }

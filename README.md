@@ -2,10 +2,6 @@
 
 Markdown talk outline parser.
 
-## `// TODO`
-
-- Remove HTML formatting from titles.
-
 ## Ideas
 
 - Change the file line reader in an iterable collection.
