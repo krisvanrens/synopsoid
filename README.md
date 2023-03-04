@@ -77,6 +77,6 @@ $ jq < test.json
 
 ## Ideas
 
-- Use the `Display` trait instead of a custom one.
+- Implement the `Display` trait on the `Outline` heading collection to lose the silly static boolean.
 - Custom JSON serializer.
 - Change the file line reader in an iterable collection...just because.
