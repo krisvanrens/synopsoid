@@ -3,6 +3,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use serde::Serialize;
 use std::{
+    fmt,
     fs::{self, File},
     io::{self, BufRead},
     path::Path,
@@ -32,17 +33,13 @@ enum Heading {
 
 type Outline = Vec<Heading>;
 
-trait Printable {
-    fn print(&self);
-}
-
 // Example printed layout:
 //
 //   ⇒ Heading 1
 //     ↳ Heading 2
 //
-impl Printable for Heading {
-    fn print(&self) {
+impl fmt::Display for Heading {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Heading::H1(title) => {
                 static FIRST_PRINT: AtomicBool = AtomicBool::new(true);
@@ -52,9 +49,9 @@ impl Printable for Heading {
                     FIRST_PRINT.store(false, Ordering::SeqCst);
                     ""
                 };
-                println!("{}\u{21d2} {}", prefix, title.to_string().bold())
+                write!(f, "{}\u{21d2} {}", prefix, title.to_string().bold())
             }
-            Heading::H2(title) => println!("  \u{21b3} {title}"),
+            Heading::H2(title) => write!(f, "  \u{21b3} {title}"),
         }
     }
 }
@@ -65,7 +62,7 @@ fn main() {
 
     if args.output.is_empty() {
         for heading in synopsis {
-            heading.print();
+            println!("{heading}");
         }
     } else {
         fs::write(
