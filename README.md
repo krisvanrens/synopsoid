@@ -56,27 +56,24 @@ $ jq < test.json
 ```
 
 ```json
-[
-  {
-    "H1": "Chapter 1"
-  },
-  {
-    "H2": "Section 1.1: Yadayada"
-  },
-  {
-    "H1": "Chapter 2 Subtitle"
-  }
-  {
-    "H2": "Section 2.1: bold"
-  },
-  {
-    "H2": "Section 2.2: match"
-  }
-]
+{
+  "headings": [
+    {
+      "H1": "Chapter 1"
+    },
+    {
+      "H2": "Section 1.1: Yadayada"
+    },
+    {
+      "H1": "Chapter 2 Subtitle"
+    },
+    {
+      "H2": "Section 2.1: bold"
+    },
+    {
+      "H2": "Section 2.2: match"
+    }
+  ]
+}
 ```
 
-## Ideas
-
-- Implement the `Display` trait on the `Outline` heading collection to lose the silly static boolean.
-- Custom JSON serializer.
-- Change the file line reader in an iterable collection...just because.

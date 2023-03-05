@@ -7,7 +7,6 @@ use std::{
     fs::{self, File},
     io::{self, BufRead},
     path::Path,
-    sync::atomic::{AtomicBool, Ordering},
 };
 
 use clap::Parser;
@@ -31,28 +30,38 @@ enum Heading {
     H2(String),
 }
 
-type Outline = Vec<Heading>;
+#[derive(Debug, Serialize)]
+struct Outline {
+    headings: Vec<Heading>,
+}
+
+impl Outline {
+    fn new() -> Self {
+        Self {
+            headings: Vec::new(),
+        }
+    }
+}
 
 // Example printed layout:
 //
 //   ⇒ Heading 1
 //     ↳ Heading 2
 //
-impl fmt::Display for Heading {
+impl fmt::Display for Outline {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Heading::H1(title) => {
-                static FIRST_PRINT: AtomicBool = AtomicBool::new(true);
-                let prefix = if !FIRST_PRINT.load(Ordering::Relaxed) {
-                    "\n"
-                } else {
-                    FIRST_PRINT.store(false, Ordering::SeqCst);
-                    ""
-                };
-                write!(f, "{}\u{21d2} {}", prefix, title.to_string().bold())
+        let mut first_h1 = true;
+        for heading in &self.headings {
+            match heading {
+                Heading::H1(title) => {
+                    let prefix = if first_h1 { "" } else { "\n" };
+                    first_h1 = false;
+                    writeln!(f, "{}\u{21d2} {}", prefix, title.to_string().bold())?
+                }
+                Heading::H2(title) => writeln!(f, "  \u{21b3} {title}")?,
             }
-            Heading::H2(title) => write!(f, "  \u{21b3} {title}"),
         }
+        Ok(())
     }
 }
 
@@ -61,9 +70,7 @@ fn main() {
     let synopsis = parse_lines(args.path);
 
     if args.output.is_empty() {
-        for heading in synopsis {
-            println!("{heading}");
-        }
+        print!("{synopsis}");
     } else {
         fs::write(
             &args.output,
@@ -130,7 +137,7 @@ where
         for line in line_buffer {
             if let Ok(l) = line {
                 if let Some(heading) = parse_line(&l) {
-                    result.push(heading);
+                    result.headings.push(heading);
                 }
             } else {
                 eprintln!("Failed to parse line");
@@ -140,6 +147,6 @@ where
         eprintln!("Failed to open file '{}'", filename.as_ref().display());
     }
 
-    result.dedup();
+    result.headings.dedup();
     result
 }
