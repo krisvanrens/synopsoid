@@ -61,6 +61,7 @@ impl fmt::Display for Outline {
                 Heading::H2(title) => writeln!(f, "  \u{21b3} {title}")?,
             }
         }
+
         Ok(())
     }
 }
