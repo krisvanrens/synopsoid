@@ -26,6 +26,9 @@ Input file `test.md`:
 Text will be skipped everywhere.
 
 ## Section 1.1: <emph>Yadayada</emph>
+## Section 1.1: <emph>Yadayada</emph>
+
+Duplicate subsections (as in presentations) will be deduplicated.
 
 ### Subsections will be skipped
 
@@ -39,7 +42,6 @@ Synopsoid output for printing:
 
 ```text
 $ synopsoid --path test.md
-
 ⇒ Chapter 1
   ↳ Section 1.1: Yadayada
 
