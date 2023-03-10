@@ -28,7 +28,7 @@ Text will be skipped everywhere.
 ## Section 1.1: <emph>Yadayada</emph>
 ## Section 1.1: <emph>Yadayada</emph>
 
-Duplicate subsections (as in presentations) will be deduplicated.
+Duplicate consecutive sections (as in presentations) will be deduplicated.
 
 ### Subsections will be skipped
 
