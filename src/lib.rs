@@ -1,14 +1,12 @@
+mod filereader;
+
 pub mod lib {
+    use crate::filereader::*;
     use colored::Colorize;
     use lazy_static::lazy_static;
     use regex::Regex;
     use serde::Serialize;
-    use std::{
-        fmt,
-        fs::File,
-        io::{self, BufRead},
-        path::Path,
-    };
+    use std::{fmt, path::Path};
 
     #[derive(Debug, PartialEq, Serialize)]
     pub enum Heading {
@@ -64,14 +62,6 @@ pub mod lib {
     {
         let mut result = Outline::new();
 
-        fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-        where
-            P: AsRef<Path>,
-        {
-            let file = File::open(filename)?;
-            Ok(io::BufReader::new(file).lines())
-        }
-
         fn clean_title(title: &str) -> String {
             lazy_static! {
                 static ref RE_HTML: Regex = Regex::new(r"(<[/]*[a-z0-9\-]+>)").unwrap();
@@ -111,18 +101,14 @@ pub mod lib {
             None
         }
 
-        if let Ok(line_buffer) = read_lines(&filename) {
-            for line in line_buffer {
-                if let Ok(l) = line {
-                    if let Some(heading) = parse_line(&l) {
-                        result.headings.push(heading);
-                    }
-                } else {
-                    eprintln!("Failed to parse line");
+        if let Ok(file) = FileReader::try_new(&filename) {
+            for line in file {
+                if let Some(heading) = parse_line(&line) {
+                    result.headings.push(heading);
                 }
             }
         } else {
-            eprintln!("Failed to open file '{}'", filename.as_ref().display());
+            eprintln!("failed to open file '{}'", filename.as_ref().display());
         }
 
         result.headings.dedup();
